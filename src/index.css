@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 261 84% 63%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -30,24 +31,17 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 262 83.3% 57.8%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -61,7 +55,7 @@
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
+    --primary: 261 84% 63%;
     --primary-foreground: 222.2 47.4% 11.2%;
 
     --secondary: 217.2 32.6% 17.5%;
@@ -78,7 +72,7 @@
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 262 83.3% 57.8%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -97,5 +91,59 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .quiz-container {
+    @apply max-w-4xl mx-auto px-4 py-8 min-h-screen flex flex-col;
+  }
+  
+  .quiz-title {
+    @apply text-3xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-quiz-primary to-quiz-secondary bg-clip-text text-transparent;
+  }
+  
+  .quiz-card {
+    @apply bg-white dark:bg-gray-800 rounded-xl p-6 md:p-8 shadow-quiz-card mb-6 animate-fade-in;
+  }
+  
+  .quiz-button-primary {
+    @apply bg-gradient-to-r from-quiz-primary to-quiz-secondary hover:from-quiz-primary/90 hover:to-quiz-secondary/90 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg;
+  }
+  
+  .quiz-button-secondary {
+    @apply bg-white dark:bg-gray-800 border border-quiz-primary/30 text-quiz-primary hover:bg-quiz-light/50 font-medium py-3 px-6 rounded-lg transition-all duration-200;
+  }
+  
+  .quiz-option {
+    @apply border-2 border-gray-200 dark:border-gray-700 hover:border-quiz-primary dark:hover:border-quiz-primary p-4 rounded-lg mb-3 cursor-pointer transition-all duration-200 flex items-center;
+  }
+  
+  .quiz-option-selected {
+    @apply border-2 border-quiz-primary bg-quiz-light/50 dark:bg-quiz-primary/20;
+  }
+  
+  .quiz-option-correct {
+    @apply border-2 border-green-500 bg-green-100 dark:bg-green-900/30;
+  }
+  
+  .quiz-option-incorrect {
+    @apply border-2 border-red-500 bg-red-100 dark:bg-red-900/30;
+  }
+  
+  .quiz-progress {
+    @apply h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mb-6;
+  }
+  
+  .quiz-progress-bar {
+    @apply h-full bg-gradient-to-r from-quiz-primary to-quiz-secondary transition-all duration-300;
+  }
+  
+  .genre-tag {
+    @apply inline-block bg-quiz-light dark:bg-quiz-primary/20 text-quiz-primary px-4 py-2 rounded-full m-1 cursor-pointer hover:bg-quiz-primary hover:text-white transition-all duration-200;
+  }
+  
+  .genre-tag-selected {
+    @apply bg-quiz-primary text-white;
   }
 }
