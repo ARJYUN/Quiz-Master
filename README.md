@@ -24,5 +24,5 @@ Backend: Node.js
 📱 Mobile App version.
 
 
-🤝 Contributing
+🤝 Contributing:
 Feel free to contribute! Fork the repo, create a branch, and submit a pull request.
