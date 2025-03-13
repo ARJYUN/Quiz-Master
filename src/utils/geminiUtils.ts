@@ -26,8 +26,9 @@ export const callGeminiAPI = async (
   try {
     const prompt = generateGeminiPrompt(topic);
     
+    // Updated API endpoint to use the correct version and model
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -61,8 +62,12 @@ export const callGeminiAPI = async (
     
     // Extract the JSON string from the response
     const jsonText = data.candidates[0].content.parts[0].text;
+    
+    // Clean up any non-JSON content that might be in the response
+    const cleanedJsonText = jsonText.replace(/```json|```/g, '').trim();
+    
     // Parse the JSON string into an object
-    const parsedData: GeminiResponse = JSON.parse(jsonText);
+    const parsedData: GeminiResponse = JSON.parse(cleanedJsonText);
     
     // Convert Gemini response format to our Quiz format
     const quizQuestions: QuizQuestion[] = parsedData.questions.map((q, index) => ({
