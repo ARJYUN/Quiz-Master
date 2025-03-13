@@ -10,6 +10,7 @@ export interface Quiz {
   id: string;
   topic: string;
   questions: QuizQuestion[];
+  source?: "mock" | "gemini"; // Track if questions are from mock data or Gemini AI
 }
 
 export interface QuizResult {
@@ -22,5 +23,14 @@ export interface QuizResult {
     userAnswer: string;
     correctAnswer: string;
     isCorrect: boolean;
+  }[];
+}
+
+// For Gemini API responses
+export interface GeminiResponse {
+  questions: {
+    question: string;
+    options: string[];
+    correctAnswerIndex: number;
   }[];
 }

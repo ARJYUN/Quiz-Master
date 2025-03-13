@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Quiz, QuizQuestion, QuizResult } from "@/types/quiz";
 import { generateMockQuiz } from "@/utils/mockData";
+import { callGeminiAPI } from "@/utils/geminiUtils";
 import { useToast } from "@/hooks/use-toast";
 
 interface QuizContextType {
@@ -10,7 +11,9 @@ interface QuizContextType {
   userAnswers: number[];
   quizResult: QuizResult | null;
   isLoading: boolean;
-  generateQuiz: (topic: string) => Promise<void>;
+  apiKey: string;
+  setApiKey: (key: string) => void;
+  generateQuiz: (topic: string, useGemini?: boolean) => Promise<void>;
   startQuiz: () => void;
   answerQuestion: (questionIndex: number, answerIndex: number) => void;
   nextQuestion: () => void;
@@ -38,32 +41,48 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
   const [userAnswers, setUserAnswers] = useState<number[]>([]);
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [apiKey, setApiKey] = useState<string>("");
   
   const { toast } = useToast();
 
-  const generateQuiz = async (topic: string) => {
+  const generateQuiz = async (topic: string, useGemini: boolean = false) => {
     setIsLoading(true);
     try {
-      // In a real app, this would call the backend API
-      // For now, we'll use mock data
-      setTimeout(() => {
-        const newQuiz = generateMockQuiz(topic);
-        setQuiz(newQuiz);
-        setIsLoading(false);
-        toast({
-          title: "Quiz Generated",
-          description: `Your quiz on ${newQuiz.topic} is ready!`,
-          duration: 3000,
-        });
-      }, 1000); // Simulate API call
+      if (useGemini && apiKey) {
+        // Use Gemini to generate questions
+        const newQuiz = await callGeminiAPI(topic, apiKey);
+        
+        if (newQuiz) {
+          setQuiz(newQuiz);
+          toast({
+            title: "Quiz Generated with Gemini AI",
+            description: `Your AI-powered quiz on ${newQuiz.topic} is ready!`,
+            duration: 3000,
+          });
+        } else {
+          throw new Error("Failed to generate quiz with Gemini AI");
+        }
+      } else {
+        // Fallback to mock data
+        setTimeout(() => {
+          const newQuiz = generateMockQuiz(topic);
+          setQuiz(newQuiz);
+          toast({
+            title: "Quiz Generated",
+            description: `Your quiz on ${newQuiz.topic} is ready!`,
+            duration: 3000,
+          });
+        }, 1000); // Simulate API call
+      }
     } catch (error) {
       console.error("Error generating quiz:", error);
       toast({
         title: "Error",
-        description: "Failed to generate quiz. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to generate quiz. Please try again.",
         variant: "destructive",
         duration: 3000,
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -138,6 +157,8 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
         userAnswers,
         quizResult,
         isLoading,
+        apiKey,
+        setApiKey,
         generateQuiz,
         startQuiz,
         answerQuestion,
