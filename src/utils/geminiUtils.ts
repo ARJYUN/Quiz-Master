@@ -26,9 +26,9 @@ export const callGeminiAPI = async (
   try {
     const prompt = generateGeminiPrompt(topic);
     
-    // Updated API endpoint to use the correct version and model
+    // Updated API endpoint to use the correct model name (gemini-pro instead of gemini-1.0-pro)
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.0-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -55,7 +55,9 @@ export const callGeminiAPI = async (
     );
 
     if (!response.ok) {
-      throw new Error(`API request failed with status ${response.status}`);
+      const errorData = await response.json();
+      console.error("Gemini API error response:", errorData);
+      throw new Error(`API request failed with status ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
@@ -65,6 +67,8 @@ export const callGeminiAPI = async (
     
     // Clean up any non-JSON content that might be in the response
     const cleanedJsonText = jsonText.replace(/```json|```/g, '').trim();
+    
+    console.log("Received JSON from Gemini:", cleanedJsonText);
     
     // Parse the JSON string into an object
     const parsedData: GeminiResponse = JSON.parse(cleanedJsonText);
