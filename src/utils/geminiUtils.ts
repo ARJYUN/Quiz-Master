@@ -26,9 +26,9 @@ export const callGeminiAPI = async (
   try {
     const prompt = generateGeminiPrompt(topic);
     
-    // Updated API endpoint to use the correct model name (gemini-pro instead of gemini-1.0-pro)
+    // Updated API endpoint to use the Gemini 1.5 Flash model
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
       {
         method: "POST",
         headers: {
@@ -61,6 +61,7 @@ export const callGeminiAPI = async (
     }
 
     const data = await response.json();
+    console.log("Full Gemini API response:", data);
     
     // Extract the JSON string from the response
     const jsonText = data.candidates[0].content.parts[0].text;
